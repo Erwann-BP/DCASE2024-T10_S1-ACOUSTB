@@ -1,7 +1,7 @@
 ---
 # Root folder of real-world data
 # real_root: ./real-data
-real_root: ./real_root_19-04
+real_root: ./real_root
 
 # Folder of engine sounds
 engine_sound_dir: ./engine-sounds
