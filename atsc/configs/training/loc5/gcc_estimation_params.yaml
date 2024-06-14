@@ -1,0 +1,13 @@
+left:
+    height: 6000
+    prominence: 1000
+    distance: 10
+    width: 15, 40
+    
+right:
+    height: 10000
+    prominence: 1000
+    distance: 10
+    width: 15, 60
+    
+ 

@@ -1,0 +1,96 @@
+env:
+  real_root: C:\Users\e.betton-ployon\OneDrive - EGIS Group\Documents\These\acoustic-traffic-simulation-counting\real_root_19-04
+  engine_sound_dir: ./engine-sounds
+  work_folder: ./workfolder
+site: loc5
+traffic:
+  seed: 151
+  min_time_between_consecutive_events: 2s
+  car_max_fraction: 0.9
+  cv_max_fraction: 0.3
+  train:
+    num_hours: 24
+    start_datetime: '2024-01-01T00:00:00'
+    output_path: ./workfolder/modeling/loc5/train.csv
+  val:
+    num_hours: 24
+    start_datetime: '2024-02-01T00:00:00'
+    output_path: ./workfolder/modeling/loc5/val.csv
+simulation:
+  seed: 152
+  vehicle_types:
+  - car
+  - cv
+  direction:
+  - left
+  - right
+  init_counter: 0
+  num_events: 50
+  num_workers: 4
+  lane_width: 3.5
+  event_duration: 30
+  source_model: hm+bd
+  output_folder: ./workfolder/simulation/loc5
+training:
+  train_dataset:
+    _target_: atsc.counting.data.TrafficCountDataset
+    root: C:\Users\e.betton-ployon\OneDrive - EGIS Group\Documents\These\acoustic-traffic-simulation-counting\real_root_19-04\loc5
+    index: C:\Users\e.betton-ployon\OneDrive - EGIS Group\Documents\These\acoustic-traffic-simulation-counting\real_root_19-04\\loc5\\train_inverted_labels.csv
+    estim: true
+    site: loc5
+  val_dataset:
+    _target_: atsc.counting.data.TrafficCountDataset
+    root: C:\Users\e.betton-ployon\OneDrive - EGIS Group\Documents\These\acoustic-traffic-simulation-counting\real_root_19-04\loc5
+    index: C:\Users\e.betton-ployon\OneDrive - EGIS Group\Documents\These\acoustic-traffic-simulation-counting\real_root_19-04\\loc5\\val_inverted_labels.csv
+    estim: true
+    site: loc5
+  alias: test12
+  output_folder: ./workfolder/counting/loc5/test12
+  tags: null
+  seed: 42
+  batch_size: 16
+  num_workers: 2
+  learning_rate: 0.001
+  pretrained_model: pretrain
+  trainer:
+    max_epochs: 100
+    log_every_n_steps: 5
+    accelerator: auto
+  callbacks:
+    early_stopping:
+      monitor: val/loss_epoch
+      verbose: true
+      patience: 20
+    model_checkpoint:
+      monitor: val/loss_epoch
+      verbose: true
+      save_last: true
+      filename: best
+      dirpath: ./workfolder/counting/loc5/test12/checkpoints/
+model:
+  _target_: atsc.counting.models.leveraged_model.BoostedBaseline
+  n_channels: 4
+  n_mels: 96
+  n_gcc: 48
+  stft_params:
+    hop_length: 160
+  melscale_params:
+    n_mels: 96
+  optimizer:
+    _partial_: true
+    _target_: torch.optim.Adam
+    lr: 0.001
+inference:
+  accelerator: auto
+  alias: test12
+  batch_size: 16
+  num_workers: 2
+  split: val
+  dataset:
+    root: C:\Users\e.betton-ployon\OneDrive - EGIS Group\Documents\These\acoustic-traffic-simulation-counting\real_root_19-04\loc5
+    index: C:\Users\e.betton-ployon\OneDrive - EGIS Group\Documents\These\acoustic-traffic-simulation-counting\real_root_19-04\loc5/val_inverted_labels.csv
+    estim: true
+    site: loc5
+  output_path: ./workfolder/counting/loc5/test12/inference/val_inverted_labels.csv
+evaluation:
+  output_path: ./workfolder/counting/loc5/test12/evaluation/val_inverted_labels.csv
