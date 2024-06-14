@@ -46,7 +46,6 @@ python-dotenv = "^1.0.1"
 neptune = {version = "^1.9.1", optional = true}
 mlflow = {version = "^2.10.2", optional = true}
 coolname = "^2.2.0"
-scikitimage = "^0.23.2"
 
 [tool.poetry.extras]
 mlflow = ["mlflow"]
