@@ -126,6 +126,8 @@ inference:
     dataset:
         root: ${env.real_root}/${site}
         index: ${env.real_root}/${site}/${inference.split}.csv
+        estim: true
+        site: ${site}
 
     # Output path for inference results (csv)
     output_path: ${env.work_folder}/counting/${site}/${inference.alias}/inference/${inference.split}.csv
